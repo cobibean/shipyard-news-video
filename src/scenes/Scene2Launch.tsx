@@ -12,6 +12,7 @@ import {
 import { loadFont } from '@remotion/google-fonts/SpaceGrotesk';
 import { loadFont as loadInter } from '@remotion/google-fonts/Inter';
 import { COLORS } from '../constants';
+import type { ShipYardVideoFontSizes } from '../font-size-props';
 
 const { fontFamily: headingFont } = loadFont('normal', {
   weights: ['700'],
@@ -24,7 +25,9 @@ const { fontFamily: bodyFont } = loadInter('normal', {
 
 const punchlines = ['No roadmap.', 'No pitch deck.', "No 'coming soon.'"];
 
-export const Scene2Launch: React.FC = () => {
+export const Scene2Launch: React.FC<{
+  fontSizes: ShipYardVideoFontSizes['scene2'];
+}> = ({ fontSizes }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
@@ -157,7 +160,7 @@ export const Scene2Launch: React.FC = () => {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              gap: 12,
+              gap: 16,
             }}
           >
             {punchlineData.map((line, i) => (
@@ -166,7 +169,7 @@ export const Scene2Launch: React.FC = () => {
                 style={{
                   fontFamily: headingFont,
                   fontWeight: 700,
-                  fontSize: 42,
+                  fontSize: fontSizes.punchline,
                   color: COLORS.textPrimary,
                   transform: `translateX(${line.translateX}px)`,
                   opacity: line.opacity,
@@ -198,10 +201,10 @@ export const Scene2Launch: React.FC = () => {
               style={{
                 fontFamily: bodyFont,
                 fontWeight: 400,
-                fontSize: 28,
+                fontSize: fontSizes.intro,
                 color: COLORS.textSecondary,
                 opacity: introTextOpacity,
-                marginBottom: 20,
+                marginBottom: 28,
               }}
             >
               Just a team that said
@@ -213,7 +216,7 @@ export const Scene2Launch: React.FC = () => {
                 style={{
                   fontFamily: headingFont,
                   fontWeight: 700,
-                  fontSize: 48,
+                  fontSize: fontSizes.quote,
                   color: COLORS.textPrimary,
                   position: 'relative',
                   display: 'inline-block',

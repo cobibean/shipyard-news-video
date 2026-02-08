@@ -12,8 +12,9 @@ import { Scene4TokenUtility } from './scenes/Scene4TokenUtility';
 import { Scene5Stats } from './scenes/Scene5Stats';
 import { Scene6Close } from './scenes/Scene6Close';
 import { SCENE_FRAMES } from './constants';
+import type { ShipYardVideoProps } from './font-size-props';
 
-export const ShipYardVideo: React.FC = () => {
+export const ShipYardVideo: React.FC<ShipYardVideoProps> = ({ fontSizes }) => {
   const { fps, durationInFrames } = useVideoConfig();
 
   const shortTransition = Math.round(0.4 * fps); // 12 frames
@@ -37,7 +38,7 @@ export const ShipYardVideo: React.FC = () => {
       <TransitionSeries>
         {/* Scene 1: Cold Open */}
         <TransitionSeries.Sequence durationInFrames={SCENE_FRAMES.coldOpen}>
-          <Scene1ColdOpen />
+          <Scene1ColdOpen fontSizes={fontSizes.scene1} />
         </TransitionSeries.Sequence>
 
         {/* Fade to Scene 2 */}
@@ -48,7 +49,7 @@ export const ShipYardVideo: React.FC = () => {
 
         {/* Scene 2: The Launch */}
         <TransitionSeries.Sequence durationInFrames={SCENE_FRAMES.launch}>
-          <Scene2Launch />
+          <Scene2Launch fontSizes={fontSizes.scene2} />
         </TransitionSeries.Sequence>
 
         {/* Wipe to Scene 3 */}
@@ -59,7 +60,7 @@ export const ShipYardVideo: React.FC = () => {
 
         {/* Scene 3: ShipMint Reveal */}
         <TransitionSeries.Sequence durationInFrames={SCENE_FRAMES.shipMint}>
-          <Scene3ShipMint />
+          <Scene3ShipMint fontSizes={fontSizes.scene3} />
         </TransitionSeries.Sequence>
 
         {/* Fade to Scene 4 */}
@@ -70,7 +71,7 @@ export const ShipYardVideo: React.FC = () => {
 
         {/* Scene 4: Token Utility */}
         <TransitionSeries.Sequence durationInFrames={SCENE_FRAMES.tokenUtility}>
-          <Scene4TokenUtility />
+          <Scene4TokenUtility fontSizes={fontSizes.scene4} />
         </TransitionSeries.Sequence>
 
         {/* Slide to Scene 5 */}
@@ -81,7 +82,7 @@ export const ShipYardVideo: React.FC = () => {
 
         {/* Scene 5: Stats Montage */}
         <TransitionSeries.Sequence durationInFrames={SCENE_FRAMES.stats}>
-          <Scene5Stats />
+          <Scene5Stats fontSizes={fontSizes.scene5} />
         </TransitionSeries.Sequence>
 
         {/* Fade to Scene 6 */}
@@ -92,7 +93,7 @@ export const ShipYardVideo: React.FC = () => {
 
         {/* Scene 6: Close + CTA */}
         <TransitionSeries.Sequence durationInFrames={SCENE_FRAMES.close}>
-          <Scene6Close />
+          <Scene6Close fontSizes={fontSizes.scene6} />
         </TransitionSeries.Sequence>
       </TransitionSeries>
     </AbsoluteFill>

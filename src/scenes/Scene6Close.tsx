@@ -11,6 +11,7 @@ import {
 } from 'remotion';
 import { loadFont } from '@remotion/google-fonts/SpaceGrotesk';
 import { loadFont as loadInter } from '@remotion/google-fonts/Inter';
+import type { ShipYardVideoFontSizes } from '../font-size-props';
 
 const { fontFamily: headingFont } = loadFont('normal', {
   weights: ['700'],
@@ -29,7 +30,9 @@ const COLORS = {
   neonGreen: '#00FF66',
 };
 
-export const Scene6Close: React.FC = () => {
+export const Scene6Close: React.FC<{
+  fontSizes: ShipYardVideoFontSizes['scene6'];
+}> = ({ fontSizes }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
@@ -55,22 +58,22 @@ export const Scene6Close: React.FC = () => {
       <AbsoluteFill style={{ opacity: finalFade }}>
         {/* Polly intro: frames 0-125 */}
         <Sequence from={0} durationInFrames={125} premountFor={1 * fps}>
-          <PollyIntro fps={fps} />
+          <PollyIntro fps={fps} fontSizes={fontSizes} />
         </Sequence>
 
         {/* Two columns (Muscle / Brain): frames 55-165 */}
         <Sequence from={55} durationInFrames={110} premountFor={1 * fps}>
-          <TwoColumns fps={fps} />
+          <TwoColumns fps={fps} fontSizes={fontSizes} />
         </Sequence>
 
         {/* "We ship every week." + "Follow the process or join it.": frames 110-240 */}
         <Sequence from={110} durationInFrames={130} premountFor={1 * fps}>
-          <WeShipText fps={fps} />
+          <WeShipText fps={fps} fontSizes={fontSizes} />
         </Sequence>
 
         {/* Logos + URLs: frames 218-330 */}
         <Sequence from={218} durationInFrames={112} premountFor={1 * fps}>
-          <LogosAndLinks fps={fps} />
+          <LogosAndLinks fps={fps} fontSizes={fontSizes} />
         </Sequence>
       </AbsoluteFill>
 
@@ -85,7 +88,10 @@ export const Scene6Close: React.FC = () => {
   );
 };
 
-const PollyIntro: React.FC<{ fps: number }> = ({ fps }) => {
+const PollyIntro: React.FC<{
+  fps: number;
+  fontSizes: ShipYardVideoFontSizes['scene6'];
+}> = ({ fps, fontSizes }) => {
   const frame = useCurrentFrame();
 
   // "NOW BUILDING:" springs in
@@ -129,9 +135,14 @@ const PollyIntro: React.FC<{ fps: number }> = ({ fps }) => {
     <div
       style={{
         position: 'absolute',
-        top: '25%',
-        left: '50%',
-        transform: 'translateX(-50%)',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: '50%',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'flex-end',
         textAlign: 'center',
         opacity: sectionFade,
       }}
@@ -139,12 +150,13 @@ const PollyIntro: React.FC<{ fps: number }> = ({ fps }) => {
       <div
         style={{
           fontFamily: headingFont,
-          fontSize: 36,
+          fontSize: fontSizes.nowBuilding,
           fontWeight: 700,
           color: COLORS.primaryGreen,
-          letterSpacing: 4,
+          letterSpacing: 5,
           transform: `translateY(${nowBuildingY}px)`,
           opacity: nowBuildingOpacity,
+          whiteSpace: 'nowrap',
         }}
       >
         NOW BUILDING:
@@ -152,12 +164,13 @@ const PollyIntro: React.FC<{ fps: number }> = ({ fps }) => {
       <div
         style={{
           fontFamily: headingFont,
-          fontSize: 90,
+          fontSize: fontSizes.polly,
           fontWeight: 700,
           color: COLORS.textPrimary,
-          marginTop: 8,
+          marginTop: 10,
           transform: `scale(${pollyScale})`,
           opacity: pollyOpacity,
+          whiteSpace: 'nowrap',
         }}
       >
         POLLY
@@ -165,11 +178,12 @@ const PollyIntro: React.FC<{ fps: number }> = ({ fps }) => {
       <div
         style={{
           fontFamily: bodyFont,
-          fontSize: 28,
+          fontSize: fontSizes.pollySubtitle,
           fontWeight: 400,
           color: COLORS.textSecondary,
-          marginTop: 16,
+          marginTop: 20,
           opacity: subtitleOpacity,
+          whiteSpace: 'nowrap',
         }}
       >
         Your Polymarket AI Agent
@@ -178,7 +192,10 @@ const PollyIntro: React.FC<{ fps: number }> = ({ fps }) => {
   );
 };
 
-const TwoColumns: React.FC<{ fps: number }> = ({ fps }) => {
+const TwoColumns: React.FC<{
+  fps: number;
+  fontSizes: ShipYardVideoFontSizes['scene6'];
+}> = ({ fps, fontSizes }) => {
   const frame = useCurrentFrame();
 
   // Left column slides in from left
@@ -216,11 +233,11 @@ const TwoColumns: React.FC<{ fps: number }> = ({ fps }) => {
     <div
       style={{
         position: 'absolute',
-        top: '55%',
+        top: '60%',
         left: '50%',
         transform: 'translateX(-50%)',
         display: 'flex',
-        gap: 80,
+        gap: 110,
         opacity: sectionFade,
       }}
     >
@@ -230,17 +247,17 @@ const TwoColumns: React.FC<{ fps: number }> = ({ fps }) => {
           transform: `translateX(${leftX}px)`,
           opacity: leftOpacity,
           borderLeft: `4px solid ${COLORS.primaryGreen}`,
-          paddingLeft: 20,
-          maxWidth: 340,
+          paddingLeft: 24,
+          maxWidth: 420,
         }}
       >
         <div
           style={{
             fontFamily: headingFont,
-            fontSize: 28,
+            fontSize: fontSizes.columnTitle,
             fontWeight: 700,
             color: COLORS.primaryGreen,
-            marginBottom: 10,
+            marginBottom: 12,
           }}
         >
           THE MUSCLE
@@ -248,7 +265,7 @@ const TwoColumns: React.FC<{ fps: number }> = ({ fps }) => {
         <div
           style={{
             fontFamily: bodyFont,
-            fontSize: 20,
+            fontSize: fontSizes.columnBody,
             fontWeight: 400,
             color: COLORS.textPrimary,
             lineHeight: 1.4,
@@ -264,17 +281,17 @@ const TwoColumns: React.FC<{ fps: number }> = ({ fps }) => {
           transform: `translateX(${rightX}px)`,
           opacity: rightOpacity,
           borderLeft: `4px solid ${COLORS.primaryGreen}`,
-          paddingLeft: 20,
-          maxWidth: 340,
+          paddingLeft: 24,
+          maxWidth: 420,
         }}
       >
         <div
           style={{
             fontFamily: headingFont,
-            fontSize: 28,
+            fontSize: fontSizes.columnTitle,
             fontWeight: 700,
             color: COLORS.primaryGreen,
-            marginBottom: 10,
+            marginBottom: 12,
           }}
         >
           THE BRAIN
@@ -282,7 +299,7 @@ const TwoColumns: React.FC<{ fps: number }> = ({ fps }) => {
         <div
           style={{
             fontFamily: bodyFont,
-            fontSize: 20,
+            fontSize: fontSizes.columnBody,
             fontWeight: 400,
             color: COLORS.textPrimary,
             lineHeight: 1.4,
@@ -295,7 +312,10 @@ const TwoColumns: React.FC<{ fps: number }> = ({ fps }) => {
   );
 };
 
-const WeShipText: React.FC<{ fps: number }> = ({ fps }) => {
+const WeShipText: React.FC<{
+  fps: number;
+  fontSizes: ShipYardVideoFontSizes['scene6'];
+}> = ({ fps, fontSizes }) => {
   const frame = useCurrentFrame();
 
   // "We ship every week." springs in with scale
@@ -344,7 +364,7 @@ const WeShipText: React.FC<{ fps: number }> = ({ fps }) => {
       <div
         style={{
           fontFamily: headingFont,
-          fontSize: 64,
+          fontSize: fontSizes.weShipMain,
           fontWeight: 700,
           color: COLORS.textPrimary,
           transform: `scale(${mainScale})`,
@@ -357,10 +377,10 @@ const WeShipText: React.FC<{ fps: number }> = ({ fps }) => {
       <div
         style={{
           fontFamily: bodyFont,
-          fontSize: 32,
+          fontSize: fontSizes.weShipSub,
           fontWeight: 400,
           color: COLORS.textSecondary,
-          marginTop: 24,
+          marginTop: 30,
           opacity: subTextOpacity,
         }}
       >
@@ -370,7 +390,10 @@ const WeShipText: React.FC<{ fps: number }> = ({ fps }) => {
   );
 };
 
-const LogosAndLinks: React.FC<{ fps: number }> = ({ fps }) => {
+const LogosAndLinks: React.FC<{
+  fps: number;
+  fontSizes: ShipYardVideoFontSizes['scene6'];
+}> = ({ fps, fontSizes }) => {
   const frame = useCurrentFrame();
 
   // SHIP logo springs in from below
@@ -456,7 +479,7 @@ const LogosAndLinks: React.FC<{ fps: number }> = ({ fps }) => {
       <div
         style={{
           fontFamily: bodyFont,
-          fontSize: 28,
+          fontSize: fontSizes.url,
           fontWeight: 600,
           color: COLORS.primaryGreen,
           opacity: urlOpacity,

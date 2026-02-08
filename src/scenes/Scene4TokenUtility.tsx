@@ -11,6 +11,7 @@ import {
 } from 'remotion';
 import { loadFont } from '@remotion/google-fonts/SpaceGrotesk';
 import { loadFont as loadInter } from '@remotion/google-fonts/Inter';
+import type { ShipYardVideoFontSizes } from '../font-size-props';
 
 const { fontFamily: headingFont } = loadFont('normal', {
   weights: ['700'],
@@ -34,7 +35,9 @@ const BULLETS = [
   'Will fund builder grants',
 ];
 
-export const Scene4TokenUtility: React.FC = () => {
+export const Scene4TokenUtility: React.FC<{
+  fontSizes: ShipYardVideoFontSizes['scene4'];
+}> = ({ fontSizes }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
@@ -69,19 +72,22 @@ export const Scene4TokenUtility: React.FC = () => {
 
       {/* Stacked layout: Arrow + Titles + Bullets (frames 0-160) */}
       <Sequence from={0} durationInFrames={170} premountFor={fps}>
-        <StackedContent fps={fps} />
+        <StackedContent fps={fps} fontSizes={fontSizes} />
       </Sequence>
 
       {/* "Coordination. Not speculation." (frames 160-270) */}
       <Sequence from={160} durationInFrames={110} premountFor={fps}>
-        <ClosingMessage fps={fps} />
+        <ClosingMessage fps={fps} fontSizes={fontSizes} />
       </Sequence>
     </AbsoluteFill>
   );
 };
 
 // Unified stacked layout: Arrow → $SHIP → subtitle → section header → bullets
-const StackedContent: React.FC<{ fps: number }> = ({ fps }) => {
+const StackedContent: React.FC<{
+  fps: number;
+  fontSizes: ShipYardVideoFontSizes['scene4'];
+}> = ({ fps, fontSizes }) => {
   const frame = useCurrentFrame();
 
   // === Arrow springs in from left (frames 0-15) ===
@@ -177,7 +183,7 @@ const StackedContent: React.FC<{ fps: number }> = ({ fps }) => {
         <div
           style={{
             fontFamily: headingFont,
-            fontSize: 88,
+            fontSize: fontSizes.h1,
             fontWeight: 700,
             color: COLORS.primaryGreen,
             lineHeight: 1.1,
@@ -195,10 +201,10 @@ const StackedContent: React.FC<{ fps: number }> = ({ fps }) => {
         <div
           style={{
             fontFamily: headingFont,
-            fontSize: 32,
+            fontSize: fontSizes.h2,
             fontWeight: 700,
             color: COLORS.textPrimary,
-            marginTop: 6,
+            marginTop: 10,
             opacity: h2Opacity,
             transform: `translateY(${h2Y}px)`,
             textAlign: 'center',
@@ -213,8 +219,8 @@ const StackedContent: React.FC<{ fps: number }> = ({ fps }) => {
             width: 80,
             height: 2,
             backgroundColor: COLORS.primaryGreen,
-            marginTop: 28,
-            marginBottom: 28,
+            marginTop: 34,
+            marginBottom: 34,
             opacity: h3Opacity,
             boxShadow: '0 0 8px rgba(74, 222, 64, 0.4)',
           }}
@@ -224,12 +230,12 @@ const StackedContent: React.FC<{ fps: number }> = ({ fps }) => {
         <div
           style={{
             fontFamily: headingFont,
-            fontSize: 22,
+            fontSize: fontSizes.h3,
             fontWeight: 700,
             color: COLORS.primaryGreen,
-            letterSpacing: 2,
+            letterSpacing: 3,
             textTransform: 'uppercase',
-            marginBottom: 20,
+            marginBottom: 26,
             opacity: h3Opacity,
             textAlign: 'center',
           }}
@@ -242,7 +248,7 @@ const StackedContent: React.FC<{ fps: number }> = ({ fps }) => {
           style={{
             display: 'flex',
             flexDirection: 'column',
-            gap: 18,
+            gap: 24,
           }}
         >
           {BULLETS.map((text, i) => {
@@ -263,20 +269,20 @@ const StackedContent: React.FC<{ fps: number }> = ({ fps }) => {
                 key={i}
                 style={{
                   fontFamily: bodyFont,
-                  fontSize: 28,
+                  fontSize: fontSizes.bullet,
                   color: COLORS.textPrimary,
                   transform: `translateX(${translateX}px)`,
                   opacity,
                   whiteSpace: 'nowrap',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: 14,
+                  gap: 18,
                 }}
               >
                 <span
                   style={{
                     color: COLORS.primaryGreen,
-                    fontSize: 24,
+                    fontSize: fontSizes.bulletArrow,
                     fontWeight: 700,
                   }}
                 >
@@ -293,7 +299,10 @@ const StackedContent: React.FC<{ fps: number }> = ({ fps }) => {
 };
 
 // Closing message: "Coordination. Not speculation." with highlight wipe
-const ClosingMessage: React.FC<{ fps: number }> = ({ fps }) => {
+const ClosingMessage: React.FC<{
+  fps: number;
+  fontSizes: ShipYardVideoFontSizes['scene4'];
+}> = ({ fps, fontSizes }) => {
   const frame = useCurrentFrame();
 
   const messageScale = spring({
@@ -343,7 +352,7 @@ const ClosingMessage: React.FC<{ fps: number }> = ({ fps }) => {
         <div
           style={{
             fontFamily: headingFont,
-            fontSize: 64,
+            fontSize: fontSizes.closing,
             fontWeight: 700,
             color: COLORS.textPrimary,
             lineHeight: 1.2,

@@ -10,6 +10,7 @@ import {
 import { loadFont } from '@remotion/google-fonts/SpaceGrotesk';
 import { loadFont as loadInter } from '@remotion/google-fonts/Inter';
 import { COLORS } from '../constants';
+import type { ShipYardVideoFontSizes } from '../font-size-props';
 
 const { fontFamily: headingFont } = loadFont('normal', {
   weights: ['700'],
@@ -41,7 +42,9 @@ function getParticles(count: number, width: number, height: number) {
   return particles;
 }
 
-export const Scene1ColdOpen: React.FC = () => {
+export const Scene1ColdOpen: React.FC<{
+  fontSizes: ShipYardVideoFontSizes['scene1'];
+}> = ({ fontSizes }) => {
   const frame = useCurrentFrame();
   const { fps, width, height } = useVideoConfig();
 
@@ -219,7 +222,7 @@ export const Scene1ColdOpen: React.FC = () => {
               style={{
                 fontFamily: headingFont,
                 fontWeight: 700,
-                fontSize: 120,
+                fontSize: fontSizes.title,
                 color: COLORS.textPrimary,
                 letterSpacing: '-2px',
                 textShadow: `0 0 40px ${COLORS.primaryGreen}, 0 0 80px rgba(74, 222, 64, 0.38)`,
@@ -242,10 +245,10 @@ export const Scene1ColdOpen: React.FC = () => {
           >
             <div
               style={{
-                marginTop: 240,
+                marginTop: 290,
                 fontFamily: bodyFont,
                 fontWeight: 400,
-                fontSize: 32,
+                fontSize: fontSizes.subtitle,
                 color: COLORS.textSecondary,
                 letterSpacing: '0.5px',
                 textAlign: 'center',

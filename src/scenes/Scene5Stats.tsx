@@ -9,6 +9,7 @@ import {
 } from 'remotion';
 import { loadFont } from '@remotion/google-fonts/SpaceGrotesk';
 import { loadFont as loadInter } from '@remotion/google-fonts/Inter';
+import type { ShipYardVideoFontSizes } from '../font-size-props';
 
 const { fontFamily: headingFont } = loadFont('normal', {
   weights: ['700'],
@@ -40,7 +41,9 @@ const STATS: StatCard[] = [
   { value: 1, label: 'BOT BUILT' },
 ];
 
-export const Scene5Stats: React.FC = () => {
+export const Scene5Stats: React.FC<{
+  fontSizes: ShipYardVideoFontSizes['scene5'];
+}> = ({ fontSizes }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
@@ -60,28 +63,31 @@ export const Scene5Stats: React.FC = () => {
     >
       {/* Header: "THE RECEIPTS" */}
       <Sequence from={0} durationInFrames={270} premountFor={1 * fps}>
-        <Header fps={fps} />
+        <Header fps={fps} fontSizes={fontSizes} />
       </Sequence>
 
       {/* Stat cards grid: frames 20-160 */}
       <Sequence from={20} durationInFrames={140} premountFor={1 * fps}>
-        <StatGrid fps={fps} />
+        <StatGrid fps={fps} fontSizes={fontSizes} />
       </Sequence>
 
-      {/* Whitepaper text: frames 125-205 (80 frames = 2.67s) */}
-      <Sequence from={125} durationInFrames={80} premountFor={1 * fps}>
-        <WhitepaperText fps={fps} />
+      {/* Whitepaper text: start slightly later so enlarged copy doesn't collide with cards */}
+      <Sequence from={136} durationInFrames={74} premountFor={1 * fps}>
+        <WhitepaperText fps={fps} fontSizes={fontSizes} />
       </Sequence>
 
       {/* "We spent it shipping.": frames 195-270 (75 frames = 2.5s) */}
       <Sequence from={195} durationInFrames={75} premountFor={1 * fps}>
-        <ShippingText fps={fps} />
+        <ShippingText fps={fps} fontSizes={fontSizes} />
       </Sequence>
     </AbsoluteFill>
   );
 };
 
-const Header: React.FC<{ fps: number }> = ({ fps }) => {
+const Header: React.FC<{
+  fps: number;
+  fontSizes: ShipYardVideoFontSizes['scene5'];
+}> = ({ fps, fontSizes }) => {
   const frame = useCurrentFrame();
 
   // Header slams in with spring
@@ -126,7 +132,7 @@ const Header: React.FC<{ fps: number }> = ({ fps }) => {
       <div
         style={{
           fontFamily: headingFont,
-          fontSize: 48,
+          fontSize: fontSizes.header,
           fontWeight: 700,
           color: COLORS.primaryGreen,
           transform: `translateY(${headerY}px) scale(${headerScale})`,
@@ -137,10 +143,10 @@ const Header: React.FC<{ fps: number }> = ({ fps }) => {
       </div>
       <div
         style={{
-          width: 200,
-          height: 3,
+          width: 280,
+          height: 4,
           backgroundColor: COLORS.primaryGreen,
-          marginTop: 16,
+          marginTop: 22,
           transform: `scaleX(${Math.max(0, Math.min(1, lineScaleX))})`,
           transformOrigin: 'center',
         }}
@@ -149,7 +155,10 @@ const Header: React.FC<{ fps: number }> = ({ fps }) => {
   );
 };
 
-const StatGrid: React.FC<{ fps: number }> = ({ fps }) => {
+const StatGrid: React.FC<{
+  fps: number;
+  fontSizes: ShipYardVideoFontSizes['scene5'];
+}> = ({ fps, fontSizes }) => {
   const frame = useCurrentFrame();
 
   // Slide grid up at end of its Sequence (relative frame 100+, global 120+)
@@ -173,7 +182,7 @@ const StatGrid: React.FC<{ fps: number }> = ({ fps }) => {
         transform: `translate(-50%, -50%) translateY(${slideUp}px)`,
         display: 'grid',
         gridTemplateColumns: '1fr 1fr',
-        gap: 28,
+        gap: 36,
         opacity: gridOpacity,
       }}
     >
@@ -217,8 +226,8 @@ const StatGrid: React.FC<{ fps: number }> = ({ fps }) => {
           <div
             key={i}
             style={{
-              width: 260,
-              height: 160,
+              width: 320,
+              height: 210,
               backgroundColor: COLORS.surface,
               border: `1px solid ${COLORS.borderGreen}`,
               borderRadius: 16,
@@ -233,7 +242,7 @@ const StatGrid: React.FC<{ fps: number }> = ({ fps }) => {
             <div
               style={{
                 fontFamily: headingFont,
-                fontSize: 80,
+                fontSize: fontSizes.statValue,
                 fontWeight: 700,
                 color: COLORS.textPrimary,
                 lineHeight: 1,
@@ -244,10 +253,10 @@ const StatGrid: React.FC<{ fps: number }> = ({ fps }) => {
             <div
               style={{
                 fontFamily: bodyFont,
-                fontSize: 20,
+                fontSize: fontSizes.statLabel,
                 fontWeight: 600,
                 color: COLORS.textSecondary,
-                marginTop: 8,
+                marginTop: 10,
                 letterSpacing: 2,
               }}
             >
@@ -260,7 +269,10 @@ const StatGrid: React.FC<{ fps: number }> = ({ fps }) => {
   );
 };
 
-const WhitepaperText: React.FC<{ fps: number }> = ({ fps }) => {
+const WhitepaperText: React.FC<{
+  fps: number;
+  fontSizes: ShipYardVideoFontSizes['scene5'];
+}> = ({ fps, fontSizes }) => {
   const frame = useCurrentFrame();
 
   const textOpacity = interpolate(frame, [0, 12, 60, 80], [0, 1, 1, 0], {
@@ -280,7 +292,7 @@ const WhitepaperText: React.FC<{ fps: number }> = ({ fps }) => {
     <div
       style={{
         position: 'absolute',
-        top: '50%',
+        top: '56%',
         left: '50%',
         transform: `translate(-50%, -50%) translateY(${translateY}px)`,
         textAlign: 'center',
@@ -290,10 +302,10 @@ const WhitepaperText: React.FC<{ fps: number }> = ({ fps }) => {
       <div
         style={{
           fontFamily: bodyFont,
-          fontSize: 32,
+          fontSize: fontSizes.whitepaper,
           fontWeight: 400,
           color: COLORS.textSecondary,
-          maxWidth: 700,
+          whiteSpace: 'nowrap',
           lineHeight: 1.4,
         }}
       >
@@ -303,7 +315,10 @@ const WhitepaperText: React.FC<{ fps: number }> = ({ fps }) => {
   );
 };
 
-const ShippingText: React.FC<{ fps: number }> = ({ fps }) => {
+const ShippingText: React.FC<{
+  fps: number;
+  fontSizes: ShipYardVideoFontSizes['scene5'];
+}> = ({ fps, fontSizes }) => {
   const frame = useCurrentFrame();
 
   // Spring scale in
@@ -350,7 +365,7 @@ const ShippingText: React.FC<{ fps: number }> = ({ fps }) => {
       <div
         style={{
           fontFamily: headingFont,
-          fontSize: 52,
+          fontSize: fontSizes.shipping,
           fontWeight: 700,
           color: COLORS.textPrimary,
           textShadow: `0 0 ${glowIntensity}px rgba(74, 222, 64, 0.6)`,
@@ -364,10 +379,10 @@ const ShippingText: React.FC<{ fps: number }> = ({ fps }) => {
           <span
             style={{
               position: 'absolute',
-              bottom: -6,
+              bottom: -8,
               left: 0,
               right: 0,
-              height: 4,
+              height: 6,
               backgroundColor: COLORS.primaryGreen,
               borderRadius: 2,
               transform: `scaleX(${underlineScaleX})`,

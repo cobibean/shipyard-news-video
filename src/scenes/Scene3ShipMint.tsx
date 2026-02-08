@@ -13,6 +13,7 @@ import { Video } from '@remotion/media';
 import { loadFont } from '@remotion/google-fonts/SpaceGrotesk';
 import { loadFont as loadInter } from '@remotion/google-fonts/Inter';
 import { COLORS } from '../constants';
+import type { ShipYardVideoFontSizes } from '../font-size-props';
 
 const { fontFamily: headingFont } = loadFont('normal', {
   weights: ['700'],
@@ -34,7 +35,9 @@ const CARD_GAP = 32;
 const CAROUSEL_TOTAL_WIDTH =
   NFT_COUNT * CARD_SIZE + (NFT_COUNT - 1) * CARD_GAP;
 
-export const Scene3ShipMint: React.FC = () => {
+export const Scene3ShipMint: React.FC<{
+  fontSizes: ShipYardVideoFontSizes['scene3'];
+}> = ({ fontSizes }) => {
   const frame = useCurrentFrame();
   const { fps, width, height } = useVideoConfig();
 
@@ -221,7 +224,7 @@ export const Scene3ShipMint: React.FC = () => {
             style={{
               fontFamily: headingFont,
               fontWeight: 700,
-              fontSize: 80,
+              fontSize: fontSizes.day1Title,
               color: COLORS.primaryGreen,
               letterSpacing: '-2px',
               lineHeight: 1,
@@ -234,9 +237,9 @@ export const Scene3ShipMint: React.FC = () => {
             style={{
               fontFamily: headingFont,
               fontWeight: 700,
-              fontSize: 28,
+              fontSize: fontSizes.day1Subtitle,
               color: COLORS.textPrimary,
-              marginTop: 8,
+              marginTop: 12,
               opacity: day1SubOpacity,
             }}
           >
@@ -323,7 +326,7 @@ export const Scene3ShipMint: React.FC = () => {
           style={{
             position: 'absolute',
             left: 80,
-            top: 220,
+            top: 300,
             opacity: streamOpacity * earlyElementsFade,
             transform: `scale(${streamScale})`,
             transformOrigin: 'left top',
@@ -360,8 +363,8 @@ export const Scene3ShipMint: React.FC = () => {
               color: '#FFFFFF',
               fontFamily: bodyFont,
               fontWeight: 600,
-              fontSize: 12,
-              padding: '3px 8px',
+              fontSize: fontSizes.liveBadge,
+              padding: '5px 10px',
               borderRadius: 4,
               letterSpacing: '1px',
             }}
@@ -377,8 +380,8 @@ export const Scene3ShipMint: React.FC = () => {
           style={{
             position: 'absolute',
             left: 80,
-            bottom: 220,
-            maxWidth: 600,
+            bottom: 180,
+            maxWidth: 820,
             opacity: earlyElementsFade,
           }}
         >
@@ -386,9 +389,9 @@ export const Scene3ShipMint: React.FC = () => {
             style={{
               fontFamily: bodyFont,
               fontWeight: 400,
-              fontSize: 28,
+              fontSize: fontSizes.typewriter,
               color: COLORS.textPrimary,
-              lineHeight: 1.6,
+              lineHeight: 1.45,
             }}
           >
             <div>
@@ -441,7 +444,7 @@ export const Scene3ShipMint: React.FC = () => {
             style={{
               fontFamily: headingFont,
               fontWeight: 700,
-              fontSize: 36,
+              fontSize: fontSizes.emphasisLead,
               color: COLORS.textSecondary,
               opacity: emphasis1Opacity,
               textAlign: 'center',
@@ -454,9 +457,9 @@ export const Scene3ShipMint: React.FC = () => {
             style={{
               fontFamily: headingFont,
               fontWeight: 700,
-              fontSize: 56,
+              fontSize: fontSizes.emphasisMain,
               color: COLORS.primaryGreen,
-              marginTop: 16,
+              marginTop: 24,
               transform: `scale(${workingScale})`,
               opacity: workingOpacity,
               textAlign: 'center',
@@ -493,7 +496,7 @@ export const Scene3ShipMint: React.FC = () => {
               style={{
                 fontFamily: headingFont,
                 fontWeight: 700,
-                fontSize: 60,
+                fontSize: fontSizes.url,
                 color: COLORS.neonGreen,
                 letterSpacing: '2px',
                 textShadow: `0 0 30px rgba(0, 255, 102, 0.6), 0 0 60px rgba(0, 255, 102, 0.2)`,
