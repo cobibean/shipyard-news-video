@@ -172,7 +172,7 @@ const PollyIntro: React.FC<{ fps: number }> = ({ fps }) => {
           opacity: subtitleOpacity,
         }}
       >
-        A Polymarket trading bot
+        Your Polymarket AI Agent
       </div>
     </div>
   );

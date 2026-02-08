@@ -107,8 +107,8 @@ export const Scene3ShipMint: React.FC = () => {
   const cursorOnLine2 = frame >= 92 && frame < 120;
   const cursorBlink = Math.floor(frame / 8) % 2 === 0;
 
-  // === Fade out early elements before emphasis (Frames 150-168) ===
-  const earlyElementsFade = interpolate(frame, [150, 168], [1, 0], {
+  // === Fade out early elements before emphasis (Frames 148-163) ===
+  const earlyElementsFade = interpolate(frame, [148, 163], [1, 0], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
@@ -116,14 +116,6 @@ export const Scene3ShipMint: React.FC = () => {
   // ============================================================
   // PHASE 2: "NOT A MOCKUP" EMPHASIS (Frames 165-265)
   // ============================================================
-
-  const emphasisFlash =
-    frame >= 165 && frame <= 170
-      ? interpolate(frame, [165, 167, 170], [0, 1, 0.7], {
-          extrapolateLeft: 'clamp',
-          extrapolateRight: 'clamp',
-        })
-      : 0;
 
   const emphasis1Spring = spring({
     frame: Math.max(0, frame - 167),
@@ -211,16 +203,6 @@ export const Scene3ShipMint: React.FC = () => {
         opacity: fadeOut,
       }}
     >
-      {/* Flash overlay for emphasis */}
-      {emphasisFlash > 0 && (
-        <AbsoluteFill
-          style={{
-            backgroundColor: `rgba(74, 222, 64, ${emphasisFlash * 0.15})`,
-            pointerEvents: 'none',
-          }}
-        />
-      )}
-
       {/* ===== PHASE 1: Early elements ===== */}
 
       {/* DAY 1 header - top left */}

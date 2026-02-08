@@ -200,15 +200,14 @@ export const Scene1ColdOpen: React.FC = () => {
 
       {/* Main content container */}
       <Sequence from={25} premountFor={1 * fps}>
+        {/* "8 DAYS AGO..." — absolutely positioned so subtitle has no layout effect */}
         <AbsoluteFill
           style={{
             display: 'flex',
-            flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
           }}
         >
-          {/* "8 DAYS AGO..." */}
           <div
             style={{
               transform: `translateY(${titleTranslateY}px) scale(${finalScale})`,
@@ -230,12 +229,20 @@ export const Scene1ColdOpen: React.FC = () => {
               8 DAYS AGO...
             </div>
           </div>
+        </AbsoluteFill>
 
-          {/* Typewriter subtitle (starts at frame 45, which is frame 20 within this Sequence) */}
-          {frame >= 45 && (
+        {/* Typewriter subtitle — separate layer, positioned below the title */}
+        {frame >= 45 && (
+          <AbsoluteFill
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
             <div
               style={{
-                marginTop: 32,
+                marginTop: 240,
                 fontFamily: bodyFont,
                 fontWeight: 400,
                 fontSize: 32,
@@ -255,8 +262,8 @@ export const Scene1ColdOpen: React.FC = () => {
                 |
               </span>
             </div>
-          )}
-        </AbsoluteFill>
+          </AbsoluteFill>
+        )}
       </Sequence>
     </AbsoluteFill>
   );

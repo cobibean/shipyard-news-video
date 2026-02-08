@@ -79,19 +79,18 @@ export const Scene2Launch: React.FC = () => {
     extrapolateRight: 'clamp',
   });
 
-  const quoteProgress = spring({
-    frame: Math.max(0, frame - 123),
-    fps,
-    config: { damping: 14, stiffness: 180, mass: 0.7 },
-  });
-
-  const quoteOpacity = interpolate(quoteProgress, [0, 0.3], [0, 1], {
+  // === Typewriter for quote (Frames 123-155) ===
+  const quoteFullText = "\u2018we\u2019re going to build in public\u2019";
+  const typewriterQuoteProgress = interpolate(frame, [123, 155], [0, quoteFullText.length], {
+    extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
+  const quoteDisplayedChars = Math.floor(typewriterQuoteProgress);
+  const quoteCursorVisible = frame >= 123 && frame <= 160 && Math.floor(frame / 8) % 2 === 0;
 
-  // Highlight wipe effect on "build in public" using scaleX
+  // Highlight wipe effect on "build in public" using scaleX — starts after typewriter finishes
   const highlightWipe = spring({
-    frame: Math.max(0, frame - 130),
+    frame: Math.max(0, frame - 158),
     fps,
     config: { damping: 12, stiffness: 160, mass: 0.8 },
   });
@@ -208,55 +207,85 @@ export const Scene2Launch: React.FC = () => {
               Just a team that said
             </div>
 
-            {/* "'we're going to build in public'" with highlight wipe */}
-            <div
-              style={{
-                fontFamily: headingFont,
-                fontWeight: 700,
-                fontSize: 48,
-                color: COLORS.textPrimary,
-                opacity: quoteOpacity,
-                position: 'relative',
-                display: 'inline-block',
-              }}
-            >
-              <span>&lsquo;we&rsquo;re going to </span>
-              <span
+            {/* "'we're going to build in public'" with typewriter + highlight wipe */}
+            {frame >= 123 && (
+              <div
                 style={{
+                  fontFamily: headingFont,
+                  fontWeight: 700,
+                  fontSize: 48,
+                  color: COLORS.textPrimary,
                   position: 'relative',
                   display: 'inline-block',
                 }}
               >
-                {/* Green highlight background (wipe effect) */}
-                <span
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: -6,
-                    right: -6,
-                    bottom: 0,
-                    backgroundColor: COLORS.primaryGreen,
-                    borderRadius: 4,
-                    transform: `scaleX(${highlightWipe})`,
-                    transformOrigin: 'left center',
-                    zIndex: 0,
-                  }}
-                />
-                <span
-                  style={{
-                    position: 'relative',
-                    zIndex: 1,
-                    color:
-                      highlightWipe > 0.3
-                        ? COLORS.background
-                        : COLORS.textPrimary,
-                  }}
-                >
-                  build in public
-                </span>
-              </span>
-              <span>&rsquo;</span>
-            </div>
+                {(() => {
+                  // Split quote into prefix / highlight / suffix
+                  const prefix = '\u2018we\u2019re going to ';
+                  const highlight = 'build in public';
+                  const suffix = '\u2019';
+                  const prefixLen = prefix.length;
+                  const highlightEnd = prefixLen + highlight.length;
+
+                  const displayedPrefix = prefix.slice(0, Math.min(quoteDisplayedChars, prefixLen));
+                  const highlightChars = Math.max(0, quoteDisplayedChars - prefixLen);
+                  const displayedHighlight = highlight.slice(0, Math.min(highlightChars, highlight.length));
+                  const displayedSuffix = quoteDisplayedChars > highlightEnd ? suffix : '';
+
+                  return (
+                    <>
+                      <span>{displayedPrefix}</span>
+                      <span
+                        style={{
+                          position: 'relative',
+                          display: 'inline-block',
+                        }}
+                      >
+                        {/* Green highlight background (wipe effect) */}
+                        {displayedHighlight.length > 0 && (
+                          <span
+                            style={{
+                              position: 'absolute',
+                              top: 0,
+                              left: -6,
+                              right: -6,
+                              bottom: 0,
+                              backgroundColor: COLORS.primaryGreen,
+                              borderRadius: 4,
+                              transform: `scaleX(${highlightWipe})`,
+                              transformOrigin: 'left center',
+                              zIndex: 0,
+                            }}
+                          />
+                        )}
+                        <span
+                          style={{
+                            position: 'relative',
+                            zIndex: 1,
+                            color:
+                              highlightWipe > 0.3
+                                ? COLORS.background
+                                : COLORS.textPrimary,
+                          }}
+                        >
+                          {displayedHighlight}
+                        </span>
+                      </span>
+                      <span>{displayedSuffix}</span>
+                      <span
+                        style={{
+                          opacity: quoteCursorVisible ? 1 : 0,
+                          color: COLORS.primaryGreen,
+                          fontWeight: 700,
+                        }}
+                      >
+                        |
+                      </span>
+                    </>
+                  );
+                })()}
+              </div>
+            )}
           </AbsoluteFill>
         </Sequence>
       )}
