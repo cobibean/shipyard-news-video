@@ -23,9 +23,24 @@ const { fontFamily: bodyFont } = loadInter('normal', {
   subsets: ['latin'],
 });
 
+// NFT carousel config
+const NFT_COUNT = 10;
+const NFT_IMAGES = Array.from(
+  { length: NFT_COUNT },
+  (_, i) => `nft${i + 1}.png`,
+);
+const CARD_SIZE = 300;
+const CARD_GAP = 32;
+const CAROUSEL_TOTAL_WIDTH =
+  NFT_COUNT * CARD_SIZE + (NFT_COUNT - 1) * CARD_GAP;
+
 export const Scene3ShipMint: React.FC = () => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
+  const { fps, width, height } = useVideoConfig();
+
+  // ============================================================
+  // PHASE 1: EARLY ELEMENTS (Frames 0-168)
+  // ============================================================
 
   // === "DAY 1" text (Frames 0-30) ===
   const day1Spring = spring({
@@ -93,19 +108,22 @@ export const Scene3ShipMint: React.FC = () => {
   const cursorBlink = Math.floor(frame / 8) % 2 === 0;
 
   // === Fade out early elements before emphasis (Frames 150-168) ===
-  // Typewriter finishes at frame 118 → 32 frames (1s+) read time before fade starts
   const earlyElementsFade = interpolate(frame, [150, 168], [1, 0], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
 
-  // === "Not a mockup" emphasis (Frames 165-215) ===
-  const emphasisFlash = frame >= 165 && frame <= 170
-    ? interpolate(frame, [165, 167, 170], [0, 1, 0.7], {
-        extrapolateLeft: 'clamp',
-        extrapolateRight: 'clamp',
-      })
-    : 0;
+  // ============================================================
+  // PHASE 2: "NOT A MOCKUP" EMPHASIS (Frames 165-265)
+  // ============================================================
+
+  const emphasisFlash =
+    frame >= 165 && frame <= 170
+      ? interpolate(frame, [165, 167, 170], [0, 1, 0.7], {
+          extrapolateLeft: 'clamp',
+          extrapolateRight: 'clamp',
+        })
+      : 0;
 
   const emphasis1Spring = spring({
     frame: Math.max(0, frame - 167),
@@ -129,15 +147,19 @@ export const Scene3ShipMint: React.FC = () => {
     extrapolateRight: 'clamp',
   });
 
-  // === Emphasis fade out before URL (Frames 200-215) ===
-  const emphasisFadeOut = interpolate(frame, [200, 215], [1, 0], {
+  // Emphasis fade out before URL
+  const emphasisFadeOut = interpolate(frame, [250, 265], [1, 0], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
 
-  // === "shipmint.art" URL (Frames 210-255) ===
+  // ============================================================
+  // PHASE 3: URL + NFT CAROUSEL (Frames 260-470)
+  // ============================================================
+
+  // "shipmint.art" URL — springs in at 262
   const urlSpring = spring({
-    frame: Math.max(0, frame - 212),
+    frame: Math.max(0, frame - 262),
     fps,
     config: { damping: 14, stiffness: 180, mass: 0.6 },
   });
@@ -148,13 +170,36 @@ export const Scene3ShipMint: React.FC = () => {
 
   // Neon underline wipe
   const underlineWipe = spring({
-    frame: Math.max(0, frame - 220),
+    frame: Math.max(0, frame - 270),
     fps,
     config: { damping: 14, stiffness: 160, mass: 0.8 },
   });
 
-  // === Fade out (Frames 255-285) ===
-  const fadeOut = interpolate(frame, [255, 285], [1, 0], {
+  // URL + carousel fade out — starts just before scene fade
+  const urlCarouselFade = interpolate(frame, [388, 412], [1, 0], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
+
+  // NFT Carousel — continuous scroll right-to-left, 25% faster (frames 295-423)
+  const carouselX = interpolate(
+    frame,
+    [295, 423],
+    [width + 40, -(CAROUSEL_TOTAL_WIDTH + 40)],
+    { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' },
+  );
+
+  // Carousel fade in
+  const carouselFadeIn = interpolate(frame, [295, 308], [0, 1], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
+
+  // ============================================================
+  // SCENE FADE OUT — blends into next scene starting at frame 392
+  // ============================================================
+
+  const fadeOut = interpolate(frame, [392, 420], [1, 0], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
@@ -175,6 +220,8 @@ export const Scene3ShipMint: React.FC = () => {
           }}
         />
       )}
+
+      {/* ===== PHASE 1: Early elements ===== */}
 
       {/* DAY 1 header - top left */}
       <Sequence from={0} premountFor={1 * fps}>
@@ -396,7 +443,8 @@ export const Scene3ShipMint: React.FC = () => {
         </div>
       </Sequence>
 
-      {/* "Not a mockup" emphasis section (Frames 165-215) */}
+      {/* ===== PHASE 2: "Not a mockup" Emphasis ===== */}
+
       <Sequence from={165} premountFor={1 * fps}>
         <AbsoluteFill
           style={{
@@ -438,17 +486,19 @@ export const Scene3ShipMint: React.FC = () => {
         </AbsoluteFill>
       </Sequence>
 
-      {/* "shipmint.art" URL (Frames 210-255) */}
-      <Sequence from={210} premountFor={1 * fps}>
+      {/* ===== PHASE 3: URL + NFT Carousel ===== */}
+
+      {/* "shipmint.art" URL — 50% bigger, positioned at top */}
+      <Sequence from={260} premountFor={1 * fps}>
         <div
           style={{
             position: 'absolute',
-            bottom: 100,
+            top: '12%',
             left: 0,
             right: 0,
             display: 'flex',
             justifyContent: 'center',
-            opacity: urlOpacity,
+            opacity: urlOpacity * urlCarouselFade,
           }}
         >
           <div
@@ -461,10 +511,10 @@ export const Scene3ShipMint: React.FC = () => {
               style={{
                 fontFamily: headingFont,
                 fontWeight: 700,
-                fontSize: 40,
+                fontSize: 60,
                 color: COLORS.neonGreen,
-                letterSpacing: '1px',
-                textShadow: `0 0 20px rgba(0, 255, 102, 0.5)`,
+                letterSpacing: '2px',
+                textShadow: `0 0 30px rgba(0, 255, 102, 0.6), 0 0 60px rgba(0, 255, 102, 0.2)`,
               }}
             >
               shipmint.art
@@ -473,19 +523,106 @@ export const Scene3ShipMint: React.FC = () => {
             <div
               style={{
                 position: 'absolute',
-                bottom: -6,
+                bottom: -8,
                 left: 0,
                 width: '100%',
-                height: 3,
+                height: 4,
                 backgroundColor: COLORS.neonGreen,
                 transform: `scaleX(${underlineWipe})`,
                 transformOrigin: 'left center',
-                boxShadow: `0 0 10px ${COLORS.neonGreen}, 0 0 20px rgba(0, 255, 102, 0.4)`,
+                boxShadow: `0 0 12px ${COLORS.neonGreen}, 0 0 24px rgba(0, 255, 102, 0.5)`,
               }}
             />
           </div>
         </div>
       </Sequence>
+
+      {/* NFT Carousel — organic right-to-left glide (Frames 295-465) */}
+      <Sequence from={290} premountFor={1 * fps}>
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            overflow: 'hidden',
+            opacity: carouselFadeIn * urlCarouselFade,
+          }}
+        >
+          {NFT_IMAGES.map((img, i) => {
+            const cardBaseX = carouselX + i * (CARD_SIZE + CARD_GAP);
+
+            // Only render cards near visible range for performance
+            if (cardBaseX < -CARD_SIZE - 80 || cardBaseX > width + 80) {
+              return null;
+            }
+
+            // Organic vertical bobbing — dual-sine for natural feel
+            const yBob =
+              Math.sin(frame * 0.045 + i * 1.1) * 14 +
+              Math.sin(frame * 0.025 + i * 2.3) * 6;
+
+            // Subtle per-card tilt with gentle dynamic wobble
+            const tilt =
+              Math.sin(i * 2.1 + 0.3) * 2.2 +
+              Math.sin(frame * 0.03 + i * 1.4) * 0.5;
+
+            // Focus scale — cards near screen center appear larger (depth effect)
+            const cardCenterX = cardBaseX + CARD_SIZE / 2;
+            const screenCenter = width / 2;
+            const distFromCenter = Math.abs(cardCenterX - screenCenter);
+            const focusScale = interpolate(
+              distFromCenter,
+              [0, width / 2 + 200],
+              [1.1, 0.88],
+              { extrapolateRight: 'clamp' },
+            );
+
+            // Green glow pulse — unique phase per card
+            const glowIntensity = interpolate(
+              Math.sin(frame * 0.07 + i * 0.8),
+              [-1, 1],
+              [0.12, 0.38],
+            );
+
+            // Vertical center position
+            const cardY = height / 2 - CARD_SIZE / 2 + 30;
+
+            return (
+              <div
+                key={`nft-${i}`}
+                style={{
+                  position: 'absolute',
+                  left: cardBaseX,
+                  top: cardY + yBob,
+                  width: CARD_SIZE,
+                  height: CARD_SIZE,
+                  transform: `rotate(${tilt}deg) scale(${focusScale})`,
+                  borderRadius: 16,
+                  overflow: 'hidden',
+                  border: `2px solid rgba(74, 222, 64, ${glowIntensity})`,
+                  boxShadow: [
+                    `0 0 ${18 * glowIntensity}px rgba(74, 222, 64, ${glowIntensity * 0.5})`,
+                    `0 14px 40px rgba(0, 0, 0, 0.55)`,
+                    `inset 0 0 0 1px rgba(255, 255, 255, 0.06)`,
+                  ].join(', '),
+                }}
+              >
+                <Img
+                  src={staticFile(img)}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                  }}
+                />
+              </div>
+            );
+          })}
+        </div>
+      </Sequence>
+
     </AbsoluteFill>
   );
 };

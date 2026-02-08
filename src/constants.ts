@@ -22,7 +22,7 @@ export const VIDEO_FPS = 30;
 export const SCENE_DURATIONS = {
   coldOpen: 4.5,
   launch: 7.5,
-  shipMint: 9.5,
+  shipMint: 14,
   tokenUtility: 9,
   stats: 9,
   close: 11,

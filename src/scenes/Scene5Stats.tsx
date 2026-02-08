@@ -178,7 +178,7 @@ const StatGrid: React.FC<{ fps: number }> = ({ fps }) => {
       }}
     >
       {STATS.map((stat, i) => {
-        const delay = i * 12;
+        const delay = i * 8; // Tighter stagger so last card isn't late
 
         // Card scale-in spring
         const cardSpring = spring({
@@ -192,16 +192,26 @@ const StatGrid: React.FC<{ fps: number }> = ({ fps }) => {
           extrapolateRight: 'clamp',
         });
 
-        // Number count-up using spring
-        const countSpring = spring({
-          fps,
-          frame: frame - delay - 5,
-          config: { damping: 18, stiffness: 60 },
-          durationInFrames: 30,
-        });
-        const displayValue = Math.round(
-          interpolate(countSpring, [0, 1], [0, stat.value])
-        );
+        // Slot machine spin: cycles fast through 0-9, decelerates, lands on target
+        // Cards all start spinning together but stop in order: TL, TR, BL, BR
+        const SPIN_BASE = 40; // Base spin duration (longer spin)
+        const SPIN_STAGGER = 10; // Each card stops 10 frames after the previous
+        const SPIN_CYCLES = 5;
+        const spinStart = 3; // All start spinning at the same time
+        const spinDuration = SPIN_BASE + i * SPIN_STAGGER; // 40, 50, 60, 70
+        const spinElapsed = Math.max(0, frame - spinStart);
+        const spinProgress = Math.min(1, spinElapsed / spinDuration);
+
+        let displayValue: number;
+        if (spinProgress >= 1) {
+          displayValue = stat.value;
+        } else {
+          // Cubic ease-out: spins fast at start, decelerates naturally
+          const eased = 1 - Math.pow(1 - spinProgress, 3);
+          const totalStops = (SPIN_CYCLES + i) * 10 + stat.value;
+          const currentStop = Math.floor(eased * totalStops);
+          displayValue = currentStop % 10;
+        }
 
         return (
           <div

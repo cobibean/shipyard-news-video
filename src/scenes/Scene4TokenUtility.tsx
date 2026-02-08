@@ -67,125 +67,73 @@ export const Scene4TokenUtility: React.FC = () => {
         }}
       />
 
-      {/* PHASE 1: Arrow swoop + "$SHIP is the key" title (frames 0-100) */}
-      <Sequence from={0} durationInFrames={100} premountFor={fps}>
-        <Phase1ArrowAndTitle fps={fps} />
+      {/* Stacked layout: Arrow + Titles + Bullets (frames 0-160) */}
+      <Sequence from={0} durationInFrames={170} premountFor={fps}>
+        <StackedContent fps={fps} />
       </Sequence>
 
-      {/* PHASE 2: Bullet points (frames 65-175) */}
-      <Sequence from={65} durationInFrames={110} premountFor={fps}>
-        <Phase2Bullets fps={fps} />
-      </Sequence>
-
-      {/* PHASE 3: "Coordination. Not speculation." (frames 155-270) */}
-      <Sequence from={155} durationInFrames={115} premountFor={fps}>
-        <Phase3MainMessage fps={fps} />
+      {/* "Coordination. Not speculation." (frames 160-270) */}
+      <Sequence from={160} durationInFrames={110} premountFor={fps}>
+        <ClosingMessage fps={fps} />
       </Sequence>
     </AbsoluteFill>
   );
 };
 
-// PHASE 1: Arrow swoops in, "$SHIP is the key to the system" appears, then both fade
-const Phase1ArrowAndTitle: React.FC<{ fps: number }> = ({ fps }) => {
+// Unified stacked layout: Arrow → $SHIP → subtitle → section header → bullets
+const StackedContent: React.FC<{ fps: number }> = ({ fps }) => {
   const frame = useCurrentFrame();
-  const { width, height } = useVideoConfig();
 
-  // Arrow swoop from bottom-left
-  const swoopProgress = spring({
+  // === Arrow springs in from left (frames 0-15) ===
+  const arrowSpring = spring({
     fps,
     frame,
-    config: { damping: 14, stiffness: 80 },
-    durationInFrames: 25,
+    config: { damping: 14, stiffness: 100 },
+    durationInFrames: 20,
   });
-  const arrowX = interpolate(swoopProgress, [0, 1], [-200, width * 0.55]);
-  const arrowY = interpolate(swoopProgress, [0, 1], [height + 100, height * 0.22]);
-  const rotation = interpolate(swoopProgress, [0, 1], [-45, 0]);
+  const arrowX = interpolate(arrowSpring, [0, 1], [-120, 0]);
+  const arrowOpacity = interpolate(arrowSpring, [0, 0.3], [0, 1], {
+    extrapolateRight: 'clamp',
+  });
+  const arrowRotation = interpolate(arrowSpring, [0, 1], [-30, 0]);
 
-  // Title springs in
-  const titleScale = spring({
+  // === "$SHIP" H1 springs in (frames 5-20) ===
+  const h1Spring = spring({
     fps,
-    frame: frame - 10,
-    config: { damping: 12, stiffness: 100 },
-    durationInFrames: 25,
+    frame: frame - 5,
+    config: { damping: 12, stiffness: 120 },
+    durationInFrames: 20,
   });
-  const titleOpacity = interpolate(frame, [10, 20], [0, 1], {
-    extrapolateLeft: 'clamp',
+  const h1Scale = interpolate(h1Spring, [0, 1], [0.6, 1]);
+  const h1Opacity = interpolate(h1Spring, [0, 0.3], [0, 1], {
     extrapolateRight: 'clamp',
   });
 
-  // Fade everything out (frames 72-95 of this sequence)
-  const fadeOut = interpolate(frame, [72, 95], [1, 0], {
-    extrapolateLeft: 'clamp',
+  // === "is the key to the system" H2 fades in (frames 14-24) ===
+  const h2Spring = spring({
+    fps,
+    frame: frame - 14,
+    config: { damping: 16, stiffness: 100 },
+    durationInFrames: 18,
+  });
+  const h2Opacity = interpolate(h2Spring, [0, 0.4], [0, 1], {
+    extrapolateRight: 'clamp',
+  });
+  const h2Y = interpolate(h2Spring, [0, 1], [15, 0]);
+
+  // === "$SHIP gives you:" H3 fades in (frames 24-34) ===
+  const h3Spring = spring({
+    fps,
+    frame: frame - 24,
+    config: { damping: 16, stiffness: 100 },
+    durationInFrames: 18,
+  });
+  const h3Opacity = interpolate(h3Spring, [0, 0.4], [0, 1], {
     extrapolateRight: 'clamp',
   });
 
-  return (
-    <AbsoluteFill style={{ opacity: fadeOut }}>
-      {/* Arrow */}
-      <Img
-        src={staticFile('ship-arrow-no-background.png')}
-        style={{
-          position: 'absolute',
-          width: 180,
-          height: 'auto',
-          left: arrowX,
-          top: arrowY,
-          transform: `rotate(${rotation}deg)`,
-          filter: 'drop-shadow(0 0 20px rgba(74, 222, 64, 0.5))',
-        }}
-      />
-
-      {/* Title */}
-      <div
-        style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: `translate(-50%, -50%) scale(${titleScale})`,
-          textAlign: 'center',
-          opacity: titleOpacity,
-        }}
-      >
-        <div
-          style={{
-            fontFamily: headingFont,
-            fontSize: 100,
-            fontWeight: 700,
-            color: COLORS.primaryGreen,
-            lineHeight: 1.1,
-            textShadow: '0 0 40px rgba(74, 222, 64, 0.5), 0 0 80px rgba(74, 222, 64, 0.2)',
-          }}
-        >
-          $SHIP
-        </div>
-        <div
-          style={{
-            fontFamily: headingFont,
-            fontSize: 36,
-            fontWeight: 700,
-            color: COLORS.textPrimary,
-            marginTop: 16,
-          }}
-        >
-          is the key to the system
-        </div>
-      </div>
-    </AbsoluteFill>
-  );
-};
-
-// PHASE 2: Three bullet points fly in staggered, then fade
-const Phase2Bullets: React.FC<{ fps: number }> = ({ fps }) => {
-  const frame = useCurrentFrame();
-
-  // Fade in
-  const fadeIn = interpolate(frame, [0, 10], [0, 1], {
-    extrapolateLeft: 'clamp',
-    extrapolateRight: 'clamp',
-  });
-
-  // Fade out (frames 85-105 of this sequence)
-  const fadeOut = interpolate(frame, [85, 105], [1, 0], {
+  // === Fade everything out (frames 140-160) ===
+  const contentFade = interpolate(frame, [140, 160], [1, 0], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
@@ -196,79 +144,156 @@ const Phase2Bullets: React.FC<{ fps: number }> = ({ fps }) => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        opacity: fadeIn * fadeOut,
+        opacity: contentFade,
       }}
     >
       <div
         style={{
           display: 'flex',
           flexDirection: 'column',
-          gap: 28,
+          alignItems: 'center',
+          gap: 0,
         }}
       >
-        {/* Small header */}
+        {/* Arrow */}
+        <div
+          style={{
+            transform: `translateX(${arrowX}px) rotate(${arrowRotation}deg)`,
+            opacity: arrowOpacity,
+            marginBottom: 12,
+          }}
+        >
+          <Img
+            src={staticFile('ship-arrow-no-background.png')}
+            style={{
+              width: 140,
+              height: 'auto',
+              filter: 'drop-shadow(0 0 16px rgba(74, 222, 64, 0.5))',
+            }}
+          />
+        </div>
+
+        {/* H1: $SHIP */}
         <div
           style={{
             fontFamily: headingFont,
-            fontSize: 24,
+            fontSize: 88,
+            fontWeight: 700,
+            color: COLORS.primaryGreen,
+            lineHeight: 1.1,
+            textShadow:
+              '0 0 40px rgba(74, 222, 64, 0.5), 0 0 80px rgba(74, 222, 64, 0.2)',
+            transform: `scale(${h1Scale})`,
+            opacity: h1Opacity,
+            textAlign: 'center',
+          }}
+        >
+          $SHIP
+        </div>
+
+        {/* H2: is the key to the system */}
+        <div
+          style={{
+            fontFamily: headingFont,
+            fontSize: 32,
+            fontWeight: 700,
+            color: COLORS.textPrimary,
+            marginTop: 6,
+            opacity: h2Opacity,
+            transform: `translateY(${h2Y}px)`,
+            textAlign: 'center',
+          }}
+        >
+          is the key to the system
+        </div>
+
+        {/* Divider line */}
+        <div
+          style={{
+            width: 80,
+            height: 2,
+            backgroundColor: COLORS.primaryGreen,
+            marginTop: 28,
+            marginBottom: 28,
+            opacity: h3Opacity,
+            boxShadow: '0 0 8px rgba(74, 222, 64, 0.4)',
+          }}
+        />
+
+        {/* H3: $SHIP gives you: */}
+        <div
+          style={{
+            fontFamily: headingFont,
+            fontSize: 22,
             fontWeight: 700,
             color: COLORS.primaryGreen,
             letterSpacing: 2,
             textTransform: 'uppercase',
-            marginBottom: 8,
+            marginBottom: 20,
+            opacity: h3Opacity,
+            textAlign: 'center',
           }}
         >
           $SHIP gives you:
         </div>
 
-        {BULLETS.map((text, i) => {
-          const delay = i * 12;
-          const slideX = spring({
-            fps,
-            frame: frame - delay,
-            config: { damping: 14, stiffness: 80 },
-            durationInFrames: 20,
-          });
-          const translateX = interpolate(slideX, [0, 1], [300, 0]);
-          const opacity = interpolate(slideX, [0, 0.5], [0, 1], {
-            extrapolateRight: 'clamp',
-          });
+        {/* Bullet points — stagger in */}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 18,
+          }}
+        >
+          {BULLETS.map((text, i) => {
+            const bulletDelay = 32 + i * 10;
+            const slideX = spring({
+              fps,
+              frame: frame - bulletDelay,
+              config: { damping: 14, stiffness: 80 },
+              durationInFrames: 20,
+            });
+            const translateX = interpolate(slideX, [0, 1], [200, 0]);
+            const opacity = interpolate(slideX, [0, 0.5], [0, 1], {
+              extrapolateRight: 'clamp',
+            });
 
-          return (
-            <div
-              key={i}
-              style={{
-                fontFamily: bodyFont,
-                fontSize: 32,
-                color: COLORS.textPrimary,
-                transform: `translateX(${translateX}px)`,
-                opacity,
-                whiteSpace: 'nowrap',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 16,
-              }}
-            >
-              <span
+            return (
+              <div
+                key={i}
                 style={{
-                  color: COLORS.primaryGreen,
+                  fontFamily: bodyFont,
                   fontSize: 28,
-                  fontWeight: 700,
+                  color: COLORS.textPrimary,
+                  transform: `translateX(${translateX}px)`,
+                  opacity,
+                  whiteSpace: 'nowrap',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 14,
                 }}
               >
-                →
-              </span>
-              {text}
-            </div>
-          );
-        })}
+                <span
+                  style={{
+                    color: COLORS.primaryGreen,
+                    fontSize: 24,
+                    fontWeight: 700,
+                  }}
+                >
+                  →
+                </span>
+                {text}
+              </div>
+            );
+          })}
+        </div>
       </div>
     </AbsoluteFill>
   );
 };
 
-// PHASE 3: "Coordination. Not speculation." with highlight wipe
-const Phase3MainMessage: React.FC<{ fps: number }> = ({ fps }) => {
+// Closing message: "Coordination. Not speculation." with highlight wipe
+const ClosingMessage: React.FC<{ fps: number }> = ({ fps }) => {
   const frame = useCurrentFrame();
 
   const messageScale = spring({
