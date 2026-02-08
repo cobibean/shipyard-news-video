@@ -68,8 +68,8 @@ export const Scene6Close: React.FC = () => {
           <WeShipText fps={fps} />
         </Sequence>
 
-        {/* Logos + URLs: frames 190-330 */}
-        <Sequence from={190} durationInFrames={140} premountFor={1 * fps}>
+        {/* Logos + URLs: frames 218-330 */}
+        <Sequence from={218} durationInFrames={112} premountFor={1 * fps}>
           <LogosAndLinks fps={fps} />
         </Sequence>
       </AbsoluteFill>
@@ -324,8 +324,8 @@ const WeShipText: React.FC<{ fps: number }> = ({ fps }) => {
     extrapolateRight: 'clamp',
   });
 
-  // Fade out the whole section at end (relative 110-130 = global 220-240)
-  const sectionFade = interpolate(frame, [110, 130], [1, 0], {
+  // Fade out the whole section at end (relative 95-112 = global 205-222)
+  const sectionFade = interpolate(frame, [95, 112], [1, 0], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
