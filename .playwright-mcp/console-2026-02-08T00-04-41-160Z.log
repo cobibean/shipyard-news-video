@@ -1,0 +1,11 @@
+[ 2181376ms] [ERROR] Failed to load resource: net::ERR_INCOMPLETE_CHUNKED_ENCODING @ http://localhost:3000/events:0
+[ 2181378ms] [ERROR] Failed to load resource: net::ERR_INCOMPLETE_CHUNKED_ENCODING @ http://localhost:3000/__webpack_hmr:0
+[ 2182394ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/events:0
+[ 2182394ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/__webpack_hmr:0
+[ 2183398ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/__webpack_hmr:0
+[ 2184402ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/__webpack_hmr:0
+[ 2185396ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/events:0
+[ 2185403ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:3000/__webpack_hmr:0
+[ 2186547ms] [WARNING] [Fast refresh] Update check failed: TypeError: Failed to fetch
+    at __webpack_require__.hmrM (http://localhost:3000/bundle.js:168041:20)
+    at async check (http://localhost:3000/bundle.js:39508:28) @ http://localhost:3000/bundle.js:39555

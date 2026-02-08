@@ -21,10 +21,10 @@ export const VIDEO_FPS = 30;
 // === Scene Durations (in seconds) ===
 export const SCENE_DURATIONS = {
   coldOpen: 4.5,
-  launch: 6,
-  shipMint: 7.5,
-  tokenUtility: 7.5,
-  stats: 8,
+  launch: 7.5,
+  shipMint: 9.5,
+  tokenUtility: 9,
+  stats: 9,
   close: 11,
 } as const;
 

@@ -53,13 +53,13 @@ export const Scene6Close: React.FC = () => {
       }}
     >
       <AbsoluteFill style={{ opacity: finalFade }}>
-        {/* Polly intro: frames 0-110 */}
-        <Sequence from={0} durationInFrames={110} premountFor={1 * fps}>
+        {/* Polly intro: frames 0-125 */}
+        <Sequence from={0} durationInFrames={125} premountFor={1 * fps}>
           <PollyIntro fps={fps} />
         </Sequence>
 
-        {/* Two columns (Muscle / Brain): frames 60-155 */}
-        <Sequence from={60} durationInFrames={95} premountFor={1 * fps}>
+        {/* Two columns (Muscle / Brain): frames 55-165 */}
+        <Sequence from={55} durationInFrames={110} premountFor={1 * fps}>
           <TwoColumns fps={fps} />
         </Sequence>
 
@@ -113,14 +113,14 @@ const PollyIntro: React.FC<{ fps: number }> = ({ fps }) => {
     extrapolateRight: 'clamp',
   });
 
-  // Subtitle fades in: frames 30-60 relative
-  const subtitleOpacity = interpolate(frame, [30, 45], [0, 1], {
+  // Subtitle fades in: frames 25-38 relative (appears sooner)
+  const subtitleOpacity = interpolate(frame, [25, 38], [0, 1], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
 
-  // Fade everything out at end of this Sequence (tighter: starts sooner)
-  const sectionFade = interpolate(frame, [75, 100], [1, 0], {
+  // Fade everything out at end of this Sequence
+  const sectionFade = interpolate(frame, [90, 115], [1, 0], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
@@ -206,8 +206,8 @@ const TwoColumns: React.FC<{ fps: number }> = ({ fps }) => {
     extrapolateRight: 'clamp',
   });
 
-  // Fade out at end of Sequence (relative frame ~65-85 = global 125-145)
-  const sectionFade = interpolate(frame, [65, 85], [1, 0], {
+  // Fade out at end of Sequence (relative frame ~80-100 = global 135-155)
+  const sectionFade = interpolate(frame, [80, 100], [1, 0], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
@@ -464,7 +464,7 @@ const LogosAndLinks: React.FC<{ fps: number }> = ({ fps }) => {
           textShadow: `0 0 12px rgba(0, 255, 102, 0.4)`,
         }}
       >
-        shipmint.art | web3matters.xyz
+        web3matters.xyz | shipmint.art
       </div>
     </div>
   );

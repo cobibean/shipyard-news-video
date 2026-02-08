@@ -39,15 +39,15 @@ export const Scene4TokenUtility: React.FC = () => {
   const { fps } = useVideoConfig();
 
   // Animated gradient background
-  const gradientX = interpolate(frame, [0, 225], [30, 70], {
+  const gradientX = interpolate(frame, [0, 270], [30, 70], {
     extrapolateRight: 'clamp',
   });
-  const gradientY = interpolate(frame, [0, 225], [60, 40], {
+  const gradientY = interpolate(frame, [0, 270], [60, 40], {
     extrapolateRight: 'clamp',
   });
 
-  // Global fade out (frames 200-225)
-  const globalOpacity = interpolate(frame, [200, 225], [1, 0], {
+  // Global fade out (frames 240-270)
+  const globalOpacity = interpolate(frame, [240, 270], [1, 0], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
@@ -67,18 +67,18 @@ export const Scene4TokenUtility: React.FC = () => {
         }}
       />
 
-      {/* PHASE 1: Arrow swoop + "$SHIP is the key" title (frames 0-70) */}
-      <Sequence from={0} durationInFrames={80} premountFor={fps}>
+      {/* PHASE 1: Arrow swoop + "$SHIP is the key" title (frames 0-100) */}
+      <Sequence from={0} durationInFrames={100} premountFor={fps}>
         <Phase1ArrowAndTitle fps={fps} />
       </Sequence>
 
-      {/* PHASE 2: Bullet points (frames 50-140) */}
-      <Sequence from={50} durationInFrames={100} premountFor={fps}>
+      {/* PHASE 2: Bullet points (frames 65-175) */}
+      <Sequence from={65} durationInFrames={110} premountFor={fps}>
         <Phase2Bullets fps={fps} />
       </Sequence>
 
-      {/* PHASE 3: "Coordination. Not speculation." (frames 130-225) */}
-      <Sequence from={130} durationInFrames={95} premountFor={fps}>
+      {/* PHASE 3: "Coordination. Not speculation." (frames 155-270) */}
+      <Sequence from={155} durationInFrames={115} premountFor={fps}>
         <Phase3MainMessage fps={fps} />
       </Sequence>
     </AbsoluteFill>
@@ -113,8 +113,8 @@ const Phase1ArrowAndTitle: React.FC<{ fps: number }> = ({ fps }) => {
     extrapolateRight: 'clamp',
   });
 
-  // Fade everything out (frames 55-75 of this sequence)
-  const fadeOut = interpolate(frame, [55, 75], [1, 0], {
+  // Fade everything out (frames 72-95 of this sequence)
+  const fadeOut = interpolate(frame, [72, 95], [1, 0], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
@@ -184,8 +184,8 @@ const Phase2Bullets: React.FC<{ fps: number }> = ({ fps }) => {
     extrapolateRight: 'clamp',
   });
 
-  // Fade out (frames 75-95 of this sequence)
-  const fadeOut = interpolate(frame, [75, 95], [1, 0], {
+  // Fade out (frames 85-105 of this sequence)
+  const fadeOut = interpolate(frame, [85, 105], [1, 0], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });

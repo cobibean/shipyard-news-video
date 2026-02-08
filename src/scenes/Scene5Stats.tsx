@@ -44,8 +44,8 @@ export const Scene5Stats: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  // Final fade (frames 220-240)
-  const finalFade = interpolate(frame, [220, 240], [1, 0.85], {
+  // Final fade (frames 250-270)
+  const finalFade = interpolate(frame, [250, 270], [1, 0.85], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
@@ -59,7 +59,7 @@ export const Scene5Stats: React.FC = () => {
       }}
     >
       {/* Header: "THE RECEIPTS" */}
-      <Sequence from={0} durationInFrames={240} premountFor={1 * fps}>
+      <Sequence from={0} durationInFrames={270} premountFor={1 * fps}>
         <Header fps={fps} />
       </Sequence>
 
@@ -73,8 +73,8 @@ export const Scene5Stats: React.FC = () => {
         <WhitepaperText fps={fps} />
       </Sequence>
 
-      {/* "We spent it shipping.": frames 195-240 */}
-      <Sequence from={195} durationInFrames={45} premountFor={1 * fps}>
+      {/* "We spent it shipping.": frames 195-270 (75 frames = 2.5s) */}
+      <Sequence from={195} durationInFrames={75} premountFor={1 * fps}>
         <ShippingText fps={fps} />
       </Sequence>
     </AbsoluteFill>

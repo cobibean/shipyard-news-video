@@ -92,22 +92,23 @@ export const Scene3ShipMint: React.FC = () => {
   const cursorOnLine2 = frame >= 92 && frame < 120;
   const cursorBlink = Math.floor(frame / 8) % 2 === 0;
 
-  // === Fade out early elements before emphasis (Frames 100-118) ===
-  const earlyElementsFade = interpolate(frame, [100, 118], [1, 0], {
+  // === Fade out early elements before emphasis (Frames 150-168) ===
+  // Typewriter finishes at frame 118 → 32 frames (1s+) read time before fade starts
+  const earlyElementsFade = interpolate(frame, [150, 168], [1, 0], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
 
-  // === "Not a mockup" emphasis (Frames 120-160) ===
-  const emphasisFlash = frame >= 120 && frame <= 125
-    ? interpolate(frame, [120, 122, 125], [0, 1, 0.7], {
+  // === "Not a mockup" emphasis (Frames 165-215) ===
+  const emphasisFlash = frame >= 165 && frame <= 170
+    ? interpolate(frame, [165, 167, 170], [0, 1, 0.7], {
         extrapolateLeft: 'clamp',
         extrapolateRight: 'clamp',
       })
     : 0;
 
   const emphasis1Spring = spring({
-    frame: Math.max(0, frame - 122),
+    frame: Math.max(0, frame - 167),
     fps,
     config: { damping: 14, stiffness: 200, mass: 0.6 },
   });
@@ -118,7 +119,7 @@ export const Scene3ShipMint: React.FC = () => {
 
   // "A working product." in green with spring scale
   const workingSpring = spring({
-    frame: Math.max(0, frame - 138),
+    frame: Math.max(0, frame - 182),
     fps,
     config: { damping: 10, stiffness: 200, mass: 0.7 },
   });
@@ -128,15 +129,15 @@ export const Scene3ShipMint: React.FC = () => {
     extrapolateRight: 'clamp',
   });
 
-  // === Emphasis fade out before URL (Frames 150-165) ===
-  const emphasisFadeOut = interpolate(frame, [150, 165], [1, 0], {
+  // === Emphasis fade out before URL (Frames 200-215) ===
+  const emphasisFadeOut = interpolate(frame, [200, 215], [1, 0], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
 
-  // === "shipmint.art" URL (Frames 160-200) ===
+  // === "shipmint.art" URL (Frames 210-255) ===
   const urlSpring = spring({
-    frame: Math.max(0, frame - 162),
+    frame: Math.max(0, frame - 212),
     fps,
     config: { damping: 14, stiffness: 180, mass: 0.6 },
   });
@@ -147,13 +148,13 @@ export const Scene3ShipMint: React.FC = () => {
 
   // Neon underline wipe
   const underlineWipe = spring({
-    frame: Math.max(0, frame - 170),
+    frame: Math.max(0, frame - 220),
     fps,
     config: { damping: 14, stiffness: 160, mass: 0.8 },
   });
 
-  // === Fade out (Frames 200-225) ===
-  const fadeOut = interpolate(frame, [200, 225], [1, 0], {
+  // === Fade out (Frames 255-285) ===
+  const fadeOut = interpolate(frame, [255, 285], [1, 0], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
@@ -395,8 +396,8 @@ export const Scene3ShipMint: React.FC = () => {
         </div>
       </Sequence>
 
-      {/* "Not a mockup" emphasis section (Frames 120-165) */}
-      <Sequence from={120} premountFor={1 * fps}>
+      {/* "Not a mockup" emphasis section (Frames 165-215) */}
+      <Sequence from={165} premountFor={1 * fps}>
         <AbsoluteFill
           style={{
             display: 'flex',
@@ -437,8 +438,8 @@ export const Scene3ShipMint: React.FC = () => {
         </AbsoluteFill>
       </Sequence>
 
-      {/* "shipmint.art" URL (Frames 160-200) */}
-      <Sequence from={160} premountFor={1 * fps}>
+      {/* "shipmint.art" URL (Frames 210-255) */}
+      <Sequence from={210} premountFor={1 * fps}>
         <div
           style={{
             position: 'absolute',
