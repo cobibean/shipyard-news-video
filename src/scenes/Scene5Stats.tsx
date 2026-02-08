@@ -63,18 +63,18 @@ export const Scene5Stats: React.FC = () => {
         <Header fps={fps} />
       </Sequence>
 
-      {/* Stat cards grid: frames 20-180 */}
-      <Sequence from={20} durationInFrames={160} premountFor={1 * fps}>
+      {/* Stat cards grid: frames 20-160 */}
+      <Sequence from={20} durationInFrames={140} premountFor={1 * fps}>
         <StatGrid fps={fps} />
       </Sequence>
 
-      {/* Whitepaper text: frames 140-180 */}
-      <Sequence from={140} durationInFrames={40} premountFor={1 * fps}>
+      {/* Whitepaper text: frames 125-205 (80 frames = 2.67s) */}
+      <Sequence from={125} durationInFrames={80} premountFor={1 * fps}>
         <WhitepaperText fps={fps} />
       </Sequence>
 
-      {/* "We spent it shipping.": frames 180-240 */}
-      <Sequence from={180} durationInFrames={60} premountFor={1 * fps}>
+      {/* "We spent it shipping.": frames 195-240 */}
+      <Sequence from={195} durationInFrames={45} premountFor={1 * fps}>
         <ShippingText fps={fps} />
       </Sequence>
     </AbsoluteFill>
@@ -104,8 +104,8 @@ const Header: React.FC<{ fps: number }> = ({ fps }) => {
     durationInFrames: 15,
   });
 
-  // Fade out header when grid slides up (global frame 140+)
-  const headerOpacity = interpolate(frame, [130, 145], [1, 0], {
+  // Fade out header when grid slides up (global frame 120+)
+  const headerOpacity = interpolate(frame, [110, 125], [1, 0], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
@@ -152,14 +152,14 @@ const Header: React.FC<{ fps: number }> = ({ fps }) => {
 const StatGrid: React.FC<{ fps: number }> = ({ fps }) => {
   const frame = useCurrentFrame();
 
-  // Slide grid up at end of its Sequence (relative frame 120+, global 140+)
-  const slideUp = interpolate(frame, [120, 140], [0, -300], {
+  // Slide grid up at end of its Sequence (relative frame 100+, global 120+)
+  const slideUp = interpolate(frame, [100, 125], [0, -300], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
 
   // Fade out
-  const gridOpacity = interpolate(frame, [120, 140], [1, 0], {
+  const gridOpacity = interpolate(frame, [100, 125], [1, 0], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
@@ -253,7 +253,7 @@ const StatGrid: React.FC<{ fps: number }> = ({ fps }) => {
 const WhitepaperText: React.FC<{ fps: number }> = ({ fps }) => {
   const frame = useCurrentFrame();
 
-  const textOpacity = interpolate(frame, [0, 12, 30, 40], [0, 1, 1, 0], {
+  const textOpacity = interpolate(frame, [0, 12, 60, 80], [0, 1, 1, 0], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });

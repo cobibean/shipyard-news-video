@@ -39,15 +39,15 @@ export const Scene2Launch: React.FC = () => {
     extrapolateRight: 'clamp',
   });
 
-  // Logo fade out around frame 80
-  const logoFadeOut = interpolate(frame, [75, 85], [1, 0], {
+  // Logo fade out around frame 88-98
+  const logoFadeOut = interpolate(frame, [88, 98], [1, 0], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
 
-  // === Punchlines (Frames 30-80): stagger spring in from left ===
+  // === Punchlines (Frames 25-90): stagger spring in from left ===
   const punchlineData = punchlines.map((text, i) => {
-    const startFrame = 30 + i * 15;
+    const startFrame = 25 + i * 12; // Tighter stagger: 25, 37, 49
     const prog = spring({
       frame: Math.max(0, frame - startFrame),
       fps,
@@ -59,8 +59,8 @@ export const Scene2Launch: React.FC = () => {
       extrapolateRight: 'clamp',
     });
 
-    // Fade out at frame 80
-    const fadeOut = interpolate(frame, [75, 85], [1, 0], {
+    // Fade out at frame 88-98 (gives last punchline ~39 frames / 1.3s of hold)
+    const fadeOut = interpolate(frame, [88, 98], [1, 0], {
       extrapolateLeft: 'clamp',
       extrapolateRight: 'clamp',
     });
@@ -68,9 +68,9 @@ export const Scene2Launch: React.FC = () => {
     return { text, translateX, opacity: opacity * fadeOut };
   });
 
-  // === "Just a team that said" + highlight section (Frames 80-140) ===
+  // === "Just a team that said" + highlight section (Frames 95-155) ===
   const introTextProgress = spring({
-    frame: Math.max(0, frame - 85),
+    frame: Math.max(0, frame - 100),
     fps,
     config: { damping: 14, stiffness: 180, mass: 0.7 },
   });
@@ -80,7 +80,7 @@ export const Scene2Launch: React.FC = () => {
   });
 
   const quoteProgress = spring({
-    frame: Math.max(0, frame - 95),
+    frame: Math.max(0, frame - 110),
     fps,
     config: { damping: 14, stiffness: 180, mass: 0.7 },
   });
@@ -91,25 +91,25 @@ export const Scene2Launch: React.FC = () => {
 
   // Highlight wipe effect on "build in public" using scaleX
   const highlightWipe = spring({
-    frame: Math.max(0, frame - 105),
+    frame: Math.max(0, frame - 118),
     fps,
     config: { damping: 12, stiffness: 160, mass: 0.8 },
   });
 
   // Phase 2 visibility
-  const phase2Visible = frame >= 80;
-  const phase2FadeOut = interpolate(frame, [140, 155], [1, 0], {
+  const phase2Visible = frame >= 95;
+  const phase2FadeOut = interpolate(frame, [152, 168], [1, 0], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
 
-  // === Final transition (Frames 140-180) ===
-  const exitScale = interpolate(frame, [140, 170], [1, 0.92], {
+  // === Final transition (Frames 155-180) ===
+  const exitScale = interpolate(frame, [155, 175], [1, 0.92], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
 
-  const exitOpacity = interpolate(frame, [155, 180], [1, 0], {
+  const exitOpacity = interpolate(frame, [168, 180], [1, 0], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
@@ -181,9 +181,9 @@ export const Scene2Launch: React.FC = () => {
         </AbsoluteFill>
       </Sequence>
 
-      {/* Phase 2: "Just a team that said" + highlight quote (Frames 80-140) */}
+      {/* Phase 2: "Just a team that said" + highlight quote (Frames 95-155) */}
       {phase2Visible && (
-        <Sequence from={80} premountFor={1 * fps}>
+        <Sequence from={95} premountFor={1 * fps}>
           <AbsoluteFill
             style={{
               display: 'flex',

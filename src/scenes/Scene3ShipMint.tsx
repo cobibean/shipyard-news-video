@@ -92,6 +92,12 @@ export const Scene3ShipMint: React.FC = () => {
   const cursorOnLine2 = frame >= 92 && frame < 120;
   const cursorBlink = Math.floor(frame / 8) % 2 === 0;
 
+  // === Fade out early elements before emphasis (Frames 100-118) ===
+  const earlyElementsFade = interpolate(frame, [100, 118], [1, 0], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
+
   // === "Not a mockup" emphasis (Frames 120-160) ===
   const emphasisFlash = frame >= 120 && frame <= 125
     ? interpolate(frame, [120, 122, 125], [0, 1, 0.7], {
@@ -119,6 +125,12 @@ export const Scene3ShipMint: React.FC = () => {
 
   const workingScale = interpolate(workingSpring, [0, 1], [0.5, 1]);
   const workingOpacity = interpolate(workingSpring, [0, 0.2], [0, 1], {
+    extrapolateRight: 'clamp',
+  });
+
+  // === Emphasis fade out before URL (Frames 150-165) ===
+  const emphasisFadeOut = interpolate(frame, [150, 165], [1, 0], {
+    extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
 
@@ -171,7 +183,7 @@ export const Scene3ShipMint: React.FC = () => {
             top: 80,
             left: 80,
             transform: `scale(${day1Scale})`,
-            opacity: day1Opacity,
+            opacity: day1Opacity * earlyElementsFade,
             transformOrigin: 'left top',
           }}
         >
@@ -211,7 +223,7 @@ export const Scene3ShipMint: React.FC = () => {
             right: 60,
             top: '50%',
             transform: `translateY(-50%) translateX(${laptopTranslateX}px)`,
-            opacity: laptopOpacity,
+            opacity: laptopOpacity * earlyElementsFade,
             perspective: 1000,
           }}
         >
@@ -282,7 +294,7 @@ export const Scene3ShipMint: React.FC = () => {
             position: 'absolute',
             left: 80,
             top: 220,
-            opacity: streamOpacity,
+            opacity: streamOpacity * earlyElementsFade,
             transform: `scale(${streamScale})`,
             transformOrigin: 'left top',
           }}
@@ -337,6 +349,7 @@ export const Scene3ShipMint: React.FC = () => {
             left: 80,
             bottom: 220,
             maxWidth: 600,
+            opacity: earlyElementsFade,
           }}
         >
           <div
@@ -382,7 +395,7 @@ export const Scene3ShipMint: React.FC = () => {
         </div>
       </Sequence>
 
-      {/* "Not a mockup" emphasis section (Frames 120-160) */}
+      {/* "Not a mockup" emphasis section (Frames 120-165) */}
       <Sequence from={120} premountFor={1 * fps}>
         <AbsoluteFill
           style={{
@@ -390,6 +403,7 @@ export const Scene3ShipMint: React.FC = () => {
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
+            opacity: emphasisFadeOut,
           }}
         >
           <div

@@ -58,18 +58,18 @@ export const Scene6Close: React.FC = () => {
           <PollyIntro fps={fps} />
         </Sequence>
 
-        {/* Two columns (Muscle / Brain): frames 60-150 */}
-        <Sequence from={60} durationInFrames={90} premountFor={1 * fps}>
+        {/* Two columns (Muscle / Brain): frames 60-155 */}
+        <Sequence from={60} durationInFrames={95} premountFor={1 * fps}>
           <TwoColumns fps={fps} />
         </Sequence>
 
-        {/* "We ship every week." + "Follow the process or join it.": frames 110-260 */}
-        <Sequence from={110} durationInFrames={150} premountFor={1 * fps}>
+        {/* "We ship every week." + "Follow the process or join it.": frames 110-240 */}
+        <Sequence from={110} durationInFrames={130} premountFor={1 * fps}>
           <WeShipText fps={fps} />
         </Sequence>
 
-        {/* Logos + URLs: frames 200-330 */}
-        <Sequence from={200} durationInFrames={130} premountFor={1 * fps}>
+        {/* Logos + URLs: frames 190-330 */}
+        <Sequence from={190} durationInFrames={140} premountFor={1 * fps}>
           <LogosAndLinks fps={fps} />
         </Sequence>
       </AbsoluteFill>
@@ -119,8 +119,8 @@ const PollyIntro: React.FC<{ fps: number }> = ({ fps }) => {
     extrapolateRight: 'clamp',
   });
 
-  // Fade everything out at end of this Sequence
-  const sectionFade = interpolate(frame, [85, 110], [1, 0], {
+  // Fade everything out at end of this Sequence (tighter: starts sooner)
+  const sectionFade = interpolate(frame, [75, 100], [1, 0], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
@@ -206,8 +206,8 @@ const TwoColumns: React.FC<{ fps: number }> = ({ fps }) => {
     extrapolateRight: 'clamp',
   });
 
-  // Fade out at end of Sequence (relative frame ~40-50 = global 100-110)
-  const sectionFade = interpolate(frame, [40, 55], [1, 0], {
+  // Fade out at end of Sequence (relative frame ~65-85 = global 125-145)
+  const sectionFade = interpolate(frame, [65, 85], [1, 0], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
@@ -324,9 +324,8 @@ const WeShipText: React.FC<{ fps: number }> = ({ fps }) => {
     extrapolateRight: 'clamp',
   });
 
-  // Fade out the whole section at end
-  // Relative frame 80 = global frame 190; we keep it visible until logos come
-  const sectionFade = interpolate(frame, [130, 150], [1, 0], {
+  // Fade out the whole section at end (relative 110-130 = global 220-240)
+  const sectionFade = interpolate(frame, [110, 130], [1, 0], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
@@ -405,17 +404,23 @@ const LogosAndLinks: React.FC<{ fps: number }> = ({ fps }) => {
     extrapolateRight: 'clamp',
   });
 
+  // Subtle scale up for confident ending
+  const endScale = interpolate(frame, [0, 30, 130], [0.95, 1, 1.02], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
+
   return (
     <div
       style={{
         position: 'absolute',
         top: '50%',
         left: '50%',
-        transform: 'translateX(-50%)',
+        transform: `translate(-50%, -50%) scale(${endScale})`,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        gap: 30,
+        gap: 36,
       }}
     >
       {/* Logo row */}
@@ -429,16 +434,17 @@ const LogosAndLinks: React.FC<{ fps: number }> = ({ fps }) => {
         <Img
           src={staticFile('ship-logo-no-background.png')}
           style={{
-            width: 250,
+            width: 280,
             height: 'auto',
             transform: `translateY(${shipLogoY}px)`,
             opacity: shipLogoOpacity,
+            filter: 'drop-shadow(0 0 20px rgba(74, 222, 64, 0.3))',
           }}
         />
         <Img
           src={staticFile('W3M-logo-no-background.png')}
           style={{
-            width: 100,
+            width: 110,
             height: 'auto',
             transform: `translateY(${w3mLogoY}px)`,
             opacity: w3mLogoOpacity,
@@ -450,11 +456,12 @@ const LogosAndLinks: React.FC<{ fps: number }> = ({ fps }) => {
       <div
         style={{
           fontFamily: bodyFont,
-          fontSize: 24,
+          fontSize: 28,
           fontWeight: 600,
           color: COLORS.primaryGreen,
           opacity: urlOpacity,
-          letterSpacing: 1,
+          letterSpacing: 2,
+          textShadow: `0 0 12px rgba(0, 255, 102, 0.4)`,
         }}
       >
         shipmint.art | web3matters.xyz
